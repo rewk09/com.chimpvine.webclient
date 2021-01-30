@@ -18,7 +18,7 @@ namespace Chimpvine.WebClient
         /// <summary>
         /// Endpoint of the API and necessary IDs
         /// </summary>
-        string apiURI, userID, sessionID, fileID, gameUri;
+        string apiURI, userID, sessionID, fileID;
         
         /// <summary>
         /// Current Entry ID in the database table for this session of the gameplay
@@ -33,14 +33,8 @@ namespace Chimpvine.WebClient
 
         public JSONNode ApiResponse { get; private set; }
 
-        #region Events Raised
-        
-        public static Action<string, string, string, string, string> idInitialized;
-        
-        #endregion
-
         #region Mono Callbacks
-        void Start()
+        void OnEnable()
         {
             Init();
         }
@@ -49,49 +43,49 @@ namespace Chimpvine.WebClient
         #region Initialization for IDs
         protected override void Init()
         {
+#if UNITY_WEBGL && !UNITY_EDITOR
             setWebServiceURI();
             setFileID();
             setIDFromCookie();
-            idInitialized(sessionID, userID, fileID, apiURI, gameUri);
+#else
+            setForLocalBuild();
+#endif
         }
-        #endregion
+#endregion
 
-        #region Private Methods
+#region Private Methods
         void setWebServiceURI() 
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
             var absoluteUri = new Uri(Application.absoluteURL);
             apiURI = absoluteUri.Authority + "/Game-API/main.php";
-#else       
-            apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
-#endif
         }
 
         void setFileID() 
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
             var uri = new Uri(ChimpvineWebPlugin.GetURLFromPage());
             fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
-            gameUri = uri.ToString();
-#else
-            var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=122&forceview=1");
-            fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
-#endif
+
         }
 
         void setIDFromCookie() 
         {
-#if UNITY_WEBGL && !UNITY_EDITOR
             sessionID = ChimpvineWebPlugin.GetCookie("MoodleSession");
-            userID = ChimpvineWebPlugin.GetCookie("ChimpID");            
-#else
+            userID = ChimpvineWebPlugin.GetCookie("ChimpID");
+        }
+
+        void setForLocalBuild() 
+        {
+            apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
+            var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=122&forceview=1");
+            //fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
+            fileID = Application.productName;
             sessionID = "dummySessionID";
             userID = "1557";
-#endif
         }
-        #endregion
 
-        #region Public Methods
+#endregion
+
+#region Public Methods
         public static void SendGetDataRequest(Action<JSONNode> callback) 
         {
             Instance.StartCoroutine(Instance.GetRequestCoroutine(callback));
@@ -106,25 +100,7 @@ namespace Chimpvine.WebClient
         {
             Instance.StartCoroutine(Instance.UpdatePostRequestCoroutine(level, score));
         }
-
-        public void startReq() 
-        {
-            SendGameStartRequest(1.ToString());
-        }
-
-        public void updateReq() 
-        {
-            SendGameUpdateRequest(3.ToString(),100);
-        }
-        #endregion
-
-        public void getReq() 
-        {
-            SendGetDataRequest(res => 
-            {
-                Debug.Log(res);
-            });
-        }
+#endregion
 
 #region Web Request Coroutines
         static UnityWebRequest BuildPostRequestStart(string level)

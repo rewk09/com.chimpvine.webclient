@@ -13,7 +13,7 @@ namespace Chimpvine.WebClient
     {
         public static JSONNode ServerResponse { get; private set; }
         static Action<JSONNode> apiCallback = apiCallbackFunction;
-
+        
         static void apiCallbackFunction(JSONNode res) 
         {
             ServerResponse = ChimpvineMessenger.Instance.ApiResponse;
