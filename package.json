@@ -1,0 +1,17 @@
+{
+  "name": "com.chimpvine.webclient",
+  "version": "0.0.1",
+  "displayName": "Chimpvine Web Client",
+  "description": "This is an client REST API package to communicate with Chimpvine Rest API",
+  "unity": "2019.4",
+  "unityRelease": "9f1",
+  "keywords": [
+    "API",
+    "Chimpvine"
+  ],
+  "author": {
+    "name": "CVDev1",
+    "email": "dev1@chimpvine.com",
+    "url": "https://chimpvine.com"
+  }
+}

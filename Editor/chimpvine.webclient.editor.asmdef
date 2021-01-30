@@ -1,0 +1,9 @@
+﻿{
+	"name": "chimpvine.webclient.editor",
+	"references": [
+	"chimpvine.webclient"
+	],
+	"includePlatforms": [
+	"Editor"
+	]
+}
