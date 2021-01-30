@@ -19,7 +19,15 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     public void Awake()
     {
         _instance = this as T;
+        DontDestroyOnLoad(gameObject);
     }
 
+    public static bool InstanceExists
+    {
+        get
+        {
+            return _instance != null;
+        }
+    }
     protected virtual void Init() { }
 }

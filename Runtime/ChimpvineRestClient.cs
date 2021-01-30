@@ -25,6 +25,7 @@ namespace Chimpvine.WebClient
         /// </summary>
         public static void GetPreviousGameData(Action<JSONNode> callback = null) 
         {
+            CheckMessenger();
             if (callback == null)
             {
                 ChimpvineMessenger.SendGetDataRequest(apiCallback);
@@ -40,6 +41,7 @@ namespace Chimpvine.WebClient
         /// </summary>
         public static void SendGameStartRequest(string level) 
         {
+            CheckMessenger();
             ChimpvineMessenger.SendGameStartRequest(level);
         }
 
@@ -48,7 +50,17 @@ namespace Chimpvine.WebClient
         /// </summary>
         public static void SendGameUpdateRequest(string level, int score) 
         {
+            CheckMessenger();
             ChimpvineMessenger.SendGameUpdateRequest(level, score);
+        }
+
+        private static void CheckMessenger() 
+        {
+            if (ChimpvineMessenger.InstanceExists == false)
+            {
+                // Create an empty game object following our convention
+                new GameObject("ChimpvineClient").AddComponent<ChimpvineMessenger>();
+            }
         }
     }
 }

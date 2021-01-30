@@ -109,12 +109,12 @@ namespace Chimpvine.WebClient
 
         public void startReq() 
         {
-            SendGameStartRequest(SceneManager.GetActiveScene().name);
+            SendGameStartRequest(1.ToString());
         }
 
         public void updateReq() 
         {
-            SendGameUpdateRequest(SceneManager.GetActiveScene().name,100);
+            SendGameUpdateRequest(3.ToString(),100);
         }
         #endregion
 
