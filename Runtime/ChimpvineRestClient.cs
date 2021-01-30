@@ -10,12 +10,12 @@ namespace Chimpvine.WebClient
     /// </summary>
     public sealed class ChimpvineRestClient
     {
-        public JSONNode ServerResponse { get; private set; }
+        public static JSONNode ServerResponse { get; private set; }
         
         /// <summary>
         /// Initial Get Request Coroutine to fetch game data from previos gameplay session
         /// </summary>
-        public IEnumerator GetPreviousGameData() 
+        public static IEnumerator GetPreviousGameData() 
         {
             yield return ChimpvineMessenger.SendGetDataRequest();
             ServerResponse = ChimpvineMessenger.Instance.ApiResponse;

@@ -40,7 +40,7 @@ namespace Chimpvine.WebClient
         #endregion
 
         #region Mono Callbacks
-        void Start()
+        void OnEnable()
         {
             Init();
         }
