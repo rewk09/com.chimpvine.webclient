@@ -47,6 +47,10 @@ namespace Chimpvine.WebClient
             setWebServiceURI();
             setFileID();
             setIDFromCookie();
+            if (apiURI.Contains("localhost")) 
+            {
+                setForLocalBuild();
+            }
 #else
             setForLocalBuild();
 #endif
