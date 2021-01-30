@@ -131,6 +131,7 @@ namespace Chimpvine.WebClient
             form.AddField("session_id", Instance.sessionID);
             form.AddField("file_id", Instance.fileID);
             form.AddField("level_start", level);
+            form.AddField("level_end", level);
             form.AddField("date_start", DateTime.Now.ToString("o"));
             form.AddField("platform", Application.platform.ToString());
             UnityWebRequest request = UnityWebRequest.Post(Instance.apiURI, form);
