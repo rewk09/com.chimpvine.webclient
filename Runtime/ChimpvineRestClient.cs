@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using SimpleJSON;
 
@@ -11,15 +12,27 @@ namespace Chimpvine.WebClient
     public sealed class ChimpvineRestClient
     {
         public static JSONNode ServerResponse { get; private set; }
-        
+        static Action<JSONNode> apiCallback = apiCallbackFunction;
+
+        static void apiCallbackFunction(JSONNode res) 
+        {
+            ServerResponse = ChimpvineMessenger.Instance.ApiResponse;
+            Debug.Log(ServerResponse);
+        }
+
         /// <summary>
         /// Initial Get Request Coroutine to fetch game data from previos gameplay session
         /// </summary>
-        public static IEnumerator GetPreviousGameData() 
+        public static void GetPreviousGameData(Action<JSONNode> callback = null) 
         {
-            yield return ChimpvineMessenger.SendGetDataRequest();
-            ServerResponse = ChimpvineMessenger.Instance.ApiResponse;
-            Debug.Log(ServerResponse);
+            if (callback == null)
+            {
+                ChimpvineMessenger.SendGetDataRequest(apiCallback);
+            }
+            else 
+            {
+                ChimpvineMessenger.SendGetDataRequest(callback);
+            }
         }
 
         /// <summary>

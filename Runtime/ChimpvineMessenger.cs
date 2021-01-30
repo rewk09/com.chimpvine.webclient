@@ -40,7 +40,7 @@ namespace Chimpvine.WebClient
         #endregion
 
         #region Mono Callbacks
-        void OnEnable()
+        void Start()
         {
             Init();
         }
@@ -92,10 +92,9 @@ namespace Chimpvine.WebClient
         #endregion
 
         #region Public Methods
-        public static IEnumerator SendGetDataRequest() 
+        public static void SendGetDataRequest(Action<JSONNode> callback) 
         {
-            yield return Instance.StartCoroutine(Instance.GetRequestCoroutine());
-            Debug.Log(Instance.apiResponse);
+            Instance.StartCoroutine(Instance.GetRequestCoroutine(callback));
         }
 
         public static void SendGameStartRequest(string level) 
@@ -121,7 +120,10 @@ namespace Chimpvine.WebClient
 
         public void getReq() 
         {
-            StartCoroutine(SendGetDataRequest());
+            SendGetDataRequest(res => 
+            {
+                Debug.Log(res);
+            });
         }
 
 #region Web Request Coroutines
@@ -156,7 +158,7 @@ namespace Chimpvine.WebClient
             return request;
         }
 
-        IEnumerator GetRequestCoroutine() 
+        IEnumerator GetRequestCoroutine(Action<JSONNode> callback) 
         {
             using (UnityWebRequest req = BuildGetRequest()) 
             {
@@ -168,7 +170,7 @@ namespace Chimpvine.WebClient
                 else 
                 {
                     apiResponse = JSONNode.Parse(req.downloadHandler.text);
-                    yield return apiResponse;
+                    callback(apiResponse);
                 }
             }
         }
