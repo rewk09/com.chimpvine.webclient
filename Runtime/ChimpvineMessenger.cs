@@ -76,9 +76,8 @@ namespace Chimpvine.WebClient
         void setForLocalBuild() 
         {
             apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
-            var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=122&forceview=1");
-            //fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
-            fileID = Application.productName;
+            var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=555&forceview=1");
+            fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
             sessionID = "dummySessionID";
             userID = "1557";
         }
@@ -99,6 +98,24 @@ namespace Chimpvine.WebClient
         public static void SendGameUpdateRequest(string level, int score) 
         {
             Instance.StartCoroutine(Instance.UpdatePostRequestCoroutine(level, score));
+        }
+
+        public void getReq() 
+        {
+            SendGetDataRequest(res => 
+            {
+                Debug.Log(res["prev_data"].Count);
+            });
+        }
+
+        public void sendStartDataReq() 
+        {
+            SendGameStartRequest(1.ToString());
+        }
+
+        public void sendUpdateDataReq() 
+        {
+            SendGameUpdateRequest(5.ToString(), 50);
         }
 #endregion
 
