@@ -18,6 +18,9 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     public void Awake()
     {
+        if (!Application.isPlaying)
+            return;
+
         _instance = this as T;
         DontDestroyOnLoad(this);
     }
@@ -29,5 +32,4 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
             return _instance != null;
         }
     }
-    protected virtual void Init() { }
 }

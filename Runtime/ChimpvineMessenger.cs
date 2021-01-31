@@ -41,7 +41,7 @@ namespace Chimpvine.WebClient
         #endregion
 
         #region Initialization for IDs
-        protected override void Init()
+        private void Init()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             setWebServiceURI();
@@ -81,7 +81,7 @@ namespace Chimpvine.WebClient
         {
             apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
             var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=555&forceview=1");
-            fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
+            fileID = Application.productName;
             sessionID = "dummySessionID";
             userID = "1557";
         }

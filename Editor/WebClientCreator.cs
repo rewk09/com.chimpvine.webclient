@@ -13,6 +13,7 @@ namespace Chimpvine.WebClient.Editor
 			{
 				xapi = new GameObject("ChimpvineAPI");
 				xapi.AddComponent<ChimpvineMessenger>();
+				UnityEditor.SceneManagement.EditorSceneManager.SaveOpenScenes();
 				EditorUtility.DisplayDialog("ChimpvineAPI", "Chimpvine API Client has been added to the scene", "OK");
 			}
 			else
