@@ -8,7 +8,7 @@ namespace Chimpvine.WebClient.Editor
 		[MenuItem("Chimpvine/Create Web Client", false, 0)]
 		static void CreateManager()
 		{
-			GameObject xapi = GameObject.FindObjectOfType<ChimpvineMessenger>().gameObject;
+			GameObject xapi = GameObject.Find("ChimpvineAPI");
 			if (xapi == null)
 			{
 				xapi = new GameObject("ChimpvineAPI");
