@@ -42,7 +42,7 @@ namespace Chimpvine.WebClient
             StartCoroutine(GetPathRequest(res =>
             {
                 apiURI = res["game_api_path"];
-                assetsPath = res["game_assets_api"] + "/";
+                assetsPath = res["game_assets_api"];
                 assetsPathInitialized(assetsPath);
                 Init();
             }));
