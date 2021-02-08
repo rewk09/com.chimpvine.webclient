@@ -14,17 +14,17 @@ namespace Chimpvine.WebClient
     public class ChimpvineMessenger : MonoSingleton<ChimpvineMessenger>
     {
         #region Private Variables
-        
+
         /// <summary>
         /// Endpoint of the API and necessary IDs
         /// </summary>
-        string apiURI, userID, sessionID, fileID;
+        string apiURI, userID, sessionID, fileID, assetsPath, fileUri;
         
         /// <summary>
         /// Current Entry ID in the database table for this session of the gameplay
         /// </summary>
         int currentEntryID;
-        
+
         /// <summary>
         /// JSONNode from SimpleJSON to handle resopnse from API
         /// </summary>
@@ -32,11 +32,17 @@ namespace Chimpvine.WebClient
         #endregion
 
         public JSONNode ApiResponse { get; private set; }
+        public string AssetsPath { get; private set; }
 
         #region Mono Callbacks
-        void OnEnable()
+        void Start()
         {
-            Init();
+            StartCoroutine(GetPathRequest(res =>
+            {
+                apiURI = res["game_api_path"];
+                assetsPath = res["game_assets_api"];
+                Init();
+            }));
         }
         #endregion
 
@@ -44,12 +50,15 @@ namespace Chimpvine.WebClient
         private void Init()
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
-            setWebServiceURI();
-            setFileID();
-            setIDFromCookie();
-            if (apiURI.Contains("localhost")) 
+            var absoluteURI = new Uri(Application.absoluteURL).Authority;
+            if (absoluteURI.Contains("localhost"))
             {
                 setForLocalBuild();
+            }
+            else
+            {
+                setFileID();
+                setIDFromCookie();
             }
 #else
             setForLocalBuild();
@@ -58,17 +67,12 @@ namespace Chimpvine.WebClient
 #endregion
 
 #region Private Methods
-        void setWebServiceURI() 
-        {
-            var absoluteUri = new Uri(Application.absoluteURL);
-            apiURI = absoluteUri.Authority + "/Game-API/main.php";
-        }
-
+        
         void setFileID() 
         {
             var uri = new Uri(ChimpvineWebPlugin.GetURLFromPage());
             fileID = HttpUtility.ParseQueryString(uri.Query).Get("id");
-
+            fileUri = uri.ToString();
         }
 
         void setIDFromCookie() 
@@ -80,7 +84,6 @@ namespace Chimpvine.WebClient
         void setForLocalBuild() 
         {
             apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
-            var uri = new Uri("https://test314159.chimpvine.com/mod/resource/view.php?id=555&forceview=1");
             fileID = Application.productName;
             sessionID = "dummySessionID";
             userID = "1557";
@@ -153,6 +156,23 @@ namespace Chimpvine.WebClient
         {
             UnityWebRequest request = UnityWebRequest.Get(Instance.apiURI + "?user_id=" + Instance.userID + "&file_id=" + Instance.fileID);
             return request;
+        }
+
+        IEnumerator GetPathRequest(Action<JSONNode> callback) 
+        {
+            using (UnityWebRequest req = UnityWebRequest.Get("https://chimpvine.com/game-reference-api/game_data_path.php")) 
+            {
+                yield return req.SendWebRequest();
+                if (req.isNetworkError || req.isHttpError)
+                {
+                    Debug.LogError(req.error);
+                }
+                else 
+                {
+                    JSONNode res = JSONNode.Parse(req.downloadHandler.text);
+                    callback(res);
+                }
+            }
         }
 
         IEnumerator GetRequestCoroutine(Action<JSONNode> callback) 
