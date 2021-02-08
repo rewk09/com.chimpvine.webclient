@@ -33,14 +33,17 @@ namespace Chimpvine.WebClient
 
         public JSONNode ApiResponse { get; private set; }
         public string AssetsPath { get; private set; }
+        public static Action<string> assetsPathInitialized;
+        
 
         #region Mono Callbacks
-        void Start()
+        void OnEnable()
         {
             StartCoroutine(GetPathRequest(res =>
             {
                 apiURI = res["game_api_path"];
                 assetsPath = res["game_assets_api"] + "/";
+                assetsPathInitialized(assetsPath);
                 Init();
             }));
         }
@@ -158,7 +161,7 @@ namespace Chimpvine.WebClient
             return request;
         }
 
-        IEnumerator GetPathRequest(Action<JSONNode> callback) 
+        public IEnumerator GetPathRequest(Action<JSONNode> callback) 
         {
             using (UnityWebRequest req = UnityWebRequest.Get("https://chimpvine.com/game-reference-api/game_data_path.php")) 
             {

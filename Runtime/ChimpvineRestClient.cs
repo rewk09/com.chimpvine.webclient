@@ -13,16 +13,19 @@ namespace Chimpvine.WebClient
     {
         public static JSONNode ServerResponse { get; private set; }
         static Action<JSONNode> apiCallback = apiCallbackFunction;
-        
+        public bool pathInitialized = false;
         static void apiCallbackFunction(JSONNode res) 
         {
             ServerResponse = ChimpvineMessenger.Instance.ApiResponse;
             Debug.Log(ServerResponse);
         }
 
-        public static string GetFilePath() 
+        public void GetPath() 
         {
-            return ChimpvineMessenger.Instance.AssetsPath;
+            ChimpvineMessenger.Instance.StartCoroutine(ChimpvineMessenger.Instance.GetPathRequest(res =>
+            {
+                pathInitialized = true;
+            }));
         }
 
         /// <summary>
