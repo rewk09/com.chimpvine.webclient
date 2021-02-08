@@ -20,6 +20,11 @@ namespace Chimpvine.WebClient
             Debug.Log(ServerResponse);
         }
 
+        public static string GetFilePath() 
+        {
+            return ChimpvineMessenger.Instance.AssetsPath;
+        }
+
         /// <summary>
         /// Initial Get Request Coroutine to fetch game data from previos gameplay session
         /// </summary>
