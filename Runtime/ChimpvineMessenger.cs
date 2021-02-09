@@ -163,7 +163,7 @@ namespace Chimpvine.WebClient
 
         public IEnumerator GetPathRequest(Action<JSONNode> callback) 
         {
-            using (UnityWebRequest req = UnityWebRequest.Get("https://chimpvine.com/game-reference-api/game_data_path.php")) 
+            using (UnityWebRequest req = UnityWebRequest.Get("https://chimpvine.org/game-reference-api/game_data_path.php")) 
             {
                 yield return req.SendWebRequest();
                 if (req.isNetworkError || req.isHttpError)
