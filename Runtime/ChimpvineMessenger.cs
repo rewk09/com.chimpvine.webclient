@@ -54,7 +54,7 @@ namespace Chimpvine.WebClient
         {
 #if UNITY_WEBGL && !UNITY_EDITOR
             var absoluteURI = new Uri(Application.absoluteURL).Authority;
-            if (absoluteURI.Contains("localhost"))
+            if (absoluteURI.Contains("localhost") || ChimpvineWebPlugin.IsMobileBrowser())
             {
                 setForLocalBuild();
             }
