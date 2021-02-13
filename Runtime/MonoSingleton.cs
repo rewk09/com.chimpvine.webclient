@@ -18,11 +18,18 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
 
     public void Awake()
     {
-        if (!Application.isPlaying)
-            return;
-
-        _instance = this as T;
-        DontDestroyOnLoad(this);
+        if (_instance == null)
+        {
+            _instance = this as T;
+            // Sets this to not be destroyed when reloading scene
+            DontDestroyOnLoad(_instance.gameObject);
+        }
+        else if (_instance != this)
+        {
+            // If there's any other object exist of this type delete it
+            // as it's breaking our singleton pattern
+            Destroy(gameObject);
+        }
     }
 
     public static bool InstanceExists
