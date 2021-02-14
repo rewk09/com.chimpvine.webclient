@@ -41,6 +41,7 @@ namespace Chimpvine.WebClient
         {
             StartCoroutine(GetPathRequest(res =>
             {
+                Debug.Log(res);
                 apiURI = res["game_api_path"];
                 assetsPath = res["game_assets_api"];
                 assetsPathInitialized(assetsPath);
@@ -86,7 +87,6 @@ namespace Chimpvine.WebClient
 
         void setForLocalBuild() 
         {
-            apiURI = "https://test314159.chimpvine.com/Game-API/main.php";
             fileID = Application.productName;
             sessionID = "dummySessionID";
             userID = "1557";
